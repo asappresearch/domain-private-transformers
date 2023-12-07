@@ -37,10 +37,17 @@ at `../` location (if at another path, use that path).
 
 0. Use a redaction function to redact data.
 ```bash
+# Train domain classifier
+PYTHONPATH="." python domain_private_transformers/domain_classifier.py \
+  --split train --model_type hf ---train_epochs 5 \
+  --learning_rate 1e-5 --task dogo60 --domain_tag airline_media_ins60 --maximum_start_char 0 \
+  --save_path model/redaction/dogo3dom_train60_hf_5epochs_1e-5_best.pt
+
+# Apply classifier-based redaction
 PYTHONPATH="." python scripts/run_redaction.py \
-        --clf_model hf --clf_path model/redaction/dogo3dom_train60_hf_5epochs_1e-5_best.pt \
-        --clf_threshold 0.96 --clf_ngram_range 16,16 \
-        --output_folder_name redacted-clf0.96-dogo60-3dom-rob
+  --clf_model hf --clf_path model/redaction/dogo3dom_train60_hf_5epochs_1e-5_best.pt \
+  --clf_threshold 0.96 --clf_ngram_range 16,16 \
+  --output_folder_name redacted-clf0.96-dogo60-3dom-rob
 ```
 
 1. Preprocess data and create splits for DOGO dataset (other default values of 
